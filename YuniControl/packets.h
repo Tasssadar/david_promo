@@ -1,0 +1,286 @@
+void sendPacket(Packet *pkt)
+{
+    rs232.sendCharacter(0xFF);
+    rs232.sendCharacter(MASTER_ADDRESS);
+    rs232.sendCharacter(pkt->m_lenght+1);
+    rs232.sendCharacter(pkt->m_opcode);
+    rs232.sendBytes(pkt->m_data, pkt->m_lenght);
+}
+
+void sendPacket(Packet *pkt, uint8_t addr)
+{
+    rs232.sendCharacter(0xFF);
+    rs232.sendCharacter(addr);
+    rs232.sendCharacter(pkt->m_lenght+1);
+    rs232.sendCharacter(pkt->m_opcode);
+    rs232.sendBytes(pkt->m_data, pkt->m_lenght);
+}
+
+uint8_t pktItr = 0;
+Packet pkt;
+uint8_t startItr = 0;
+Packet pong(CMSG_PONG, 0);
+
+bool readPacket()
+{
+    char c;
+    if(!rs232.peek(c))
+        return false;
+
+    if(!startItr && !pktItr && uint8_t(c) == 0xFF)
+    {
+        startItr = 1;
+        return false;
+    }
+
+    if(startItr && uint8_t(c) == DEVICE_ADDRESS)
+    {
+        pktItr = 1;
+        startItr = 0;
+    }
+    else if(pktItr == 2)
+        pkt.m_lenght = uint8_t(c)-1;
+    else if(pktItr == 3)
+        pkt.m_opcode = uint8_t(c);
+    else if(pktItr >= 4 && pktItr < pkt.m_lenght+4)
+        pkt.m_data[pktItr-4] = uint8_t(c);
+    else 
+        return false;
+    ++pktItr;
+
+    if(pktItr > 3 && pkt.m_opcode != 0 && pktItr == pkt.m_lenght+4)
+    {
+        pktItr = 0;
+        return true;
+    }
+    return false;
+}
+
+void handlePacket(Packet *pkt)
+{
+    switch(pkt->m_opcode)
+    {
+        case SMSG_PING:
+        {
+            sendPacket(&pong);
+#ifdef PING
+            pingTimer = PING_TIME;
+            if(checkRange && rangeLastAdr == 0)
+            {
+                rangeLastAdr = 0xF8;
+                SendRangeReq();
+            }
+#endif
+            break;
+        }
+        case SMSG_SET_MOVEMENT:
+        {
+            int16_t right = ((((int16_t)pkt->m_data[0]) << 8) | (pkt->m_data[1]));
+            int16_t left = ((((int16_t)pkt->m_data[2]) << 8) | (pkt->m_data[3]));
+            
+            if(right == left)
+            {
+                speed = (fabs(right) >> 1);
+                if(speed == 0)
+                    moveflags = MOVE_NONE;
+                else if(right > 0)
+                    moveflags = MOVE_FORWARD;
+                else
+                    moveflags = MOVE_BACKWARD;
+            }
+            else if(fabs(right) == fabs(left))
+            {
+                speed = fabs(right) >> 1;
+                if(right > left)
+                    moveflags = MOVE_LEFT;
+                else
+                    moveflags = MOVE_RIGHT;
+            }
+            SetMovementByFlags();
+            break;
+        }
+        case SMSG_SET_CORRECTION_VAL:
+            correction_treshold = pkt->m_data[0];
+            break;
+        case SMSG_SET_EMERGENCY_INFO:
+            sendEmergency = (pkt->m_data[0] == 1) ? true : false;
+            break;
+        case SMSG_SET_SERVO_VAL:
+        {
+            int16_t val = (pkt->m_data[3] == 1) ? -(pkt->readUInt16(1)) : pkt->readUInt16(1);
+            setServoByFlags(pkt->m_data[0], val);
+            break;
+        }
+        case SMSG_ENCODER_START:
+        case SMSG_ENCODER_STOP:
+            clearEnc(false);
+            break;
+        case SMSG_ENCODER_GET:
+        {    
+            Packet encoder(CMSG_ENCODER_SEND, 4);
+            encoder.setInt16(0, getLeftEnc());
+            encoder.setInt16(2, getRightEnc());
+            sendPacket(&encoder);
+            break;
+        }
+        case SMSG_ENCODER_SET_EVENT:
+        {
+            setEncEvent(pkt->m_data[0], pkt->readUInt16(1), pkt->readUInt16(3));
+            if(pkt->m_data[5] == 1)
+                clearEnc(false);
+            break;
+        }
+        case SMSG_ENCODER_RM_EVENT:
+            removeEncEvent(pkt->m_data[0]);
+            if(pkt->m_data[1] == 1)
+                clearEnc(false);
+            break;
+        case SMSG_ADD_STATE:
+            state |= pkt->m_data[0];
+            break;
+        case SMSG_REMOVE_STATE:
+            state &= ~(pkt->m_data[0]);
+            break;
+        case SMSG_LASER_GATE_SET:
+            //TODO implement
+            break;
+        case SMSG_STOP:
+        {
+            StopAll(true);
+            Packet lock(CMSG_LOCKED, 1);
+            lock.m_data[0] = 0;
+            sendPacket(&lock);
+            break;
+        }
+        case SMSG_UNLOCK:
+            StartAll(true);
+#ifdef PING
+            pingTimer = PING_TIME;
+#endif
+            break;
+        case SMSG_CONNECT_REQ:
+        {
+            Packet res(CMSG_CONNECT_RES, 1);
+            res.m_data[0] = 0;
+            sendPacket(&res);
+            state &= ~(STATE_PAUSED);
+            break;
+        }
+        case SMSG_TEST:
+        {
+            Packet res(CMSG_TEST_RESULT, 5);
+            res.m_data[0] = uint8_t(isStartButtonPressed());
+            uint32_t result = test();
+            res.setUInt16(1, (result >> 16));
+            res.setUInt16(3, (result & 0xFFFF));
+            sendPacket(&res);
+            break;
+         }
+        case SMSG_SHUTDOWN_RANGE:
+            checkRange = false;
+            state &= ~(STATE_COLLISION);
+            break;
+        /*ase SMSG_TEST_RANGE:
+        {
+            uint8_t adr = FINDER_FRONT1;
+            for(uint8_t i = 0; i < 5; ++i, adr += 2)
+            {
+                if(GetMinRange(adr) > 200)
+                {
+                    Packet pkt(CMSG_RANGE_ADDR_EMPTY, 1);
+                    pkt.m_data[0] = adr;
+                    sendPacket(&pkt);
+                    break;
+                }
+            }
+            break;
+        }*/
+        case SMSG_SET_RANGE_ADDR:
+        {
+            uint8_t data[4] = { 0xA0, 0xAA, 0xA5, pkt->m_data[0] };
+            for(uint8_t i = 0; i < 4; ++i)
+            {
+                uint8_t dataS [2] = { 0, data[i] };
+                i2c.write(0xE0, &dataS[0], 2);
+                i2c.get_result();
+            }
+            clean_i2c();
+            i2c.clear();
+            break;
+        }
+        case SMSG_FORCE_MOVE:
+        {
+            if(pkt->m_data[0])
+                state |= STATE_FORCE_MOVE;
+            else
+                state &= ~(STATE_FORCE_MOVE);
+            break;
+        }
+    }
+}
+
+inline void conLost()
+{
+    setMotorPower(0, 0);
+    //clearEnc();
+    StopAll(true);
+    state &= ~(STATE_CORRECTION2);
+    state |= STATE_PAUSED;
+}
+
+void checkEncEvent(bool right)
+{
+    moveCheckTimer = MOVE_CHECK_TIME;
+
+    for(uint8_t y = 0; y < 5; ++y)
+    {
+        if(enc_events[y].id == 0)
+            continue;
+        if((enc_events[y].left != 0 && enc_events[y].left <= fabs(getLeftEnc())) ||
+            (enc_events[y].right != 0 && enc_events[y].right <= fabs(getRightEnc())) ||
+            (enc_events[y].left == 0 && enc_events[y].right == 0))
+        {
+            cli();
+            Packet encoder(CMSG_ENCODER_EVENT_DONE, 1);
+            encoder.m_data[0] = enc_events[y].id;
+            enc_events[y].id = 0;
+            sendPacket(&encoder);
+            moveflags = MOVE_NONE;
+            SetMovementByFlags();
+            sei();
+        }
+    }
+}
+
+void discButton(bool pressed)
+{
+    if(!(pressed ^ bool(state & STATE_BUTTON)))
+        return;
+
+    if(pressed)
+        state |= STATE_BUTTON;
+    else
+        state &= ~(STATE_BUTTON);
+
+    Packet button(CMSG_BUTTON_STATUS, 2);
+    button.m_data[0] = BUTTON_PAWN;
+    button.m_data[1] = pressed;
+    sendPacket(&button);
+    //clean_buttons();
+}
+
+void StartMatch()
+{
+    Packet button(CMSG_BUTTON_STATUS, 2);
+    button.m_data[0] = BUTTON_START;
+    button.m_data[1] = 0x01;
+    sendPacket(&button);
+}
+
+void sendPowerReq(uint8_t left, uint8_t right)
+{
+    Packet pkt(CMSG_SET_POWER_REQ, 2);
+    pkt.m_data[0] = left;
+    pkt.m_data[1] = right;
+    sendPacket(&pkt);
+}
