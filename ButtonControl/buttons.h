@@ -25,16 +25,6 @@ inline void clean_buttons()
     PORTC = 0;
     PORTB = 0;
 }
-uint8_t pressedButtons = 0;
-bool led = false;
-uint8_t ledCounter = 0;
-
-uint8_t i2c_slave_tx(void *)
-{
-    led = true;
-    ledCounter = 0;
-    return pressedButtons;
-}
 
 inline void ButtonPressed(uint8_t address, bool pressed)
 {
@@ -42,28 +32,17 @@ inline void ButtonPressed(uint8_t address, bool pressed)
     if((pressed && (pressedButtons & address)) || (!pressed && !(pressedButtons & address)))
         return;
     PORTD |= (1<<PD7);
-    
+
     if(pressed)
         pressedButtons |= address;
     else
         pressedButtons &= ~(address);
-    
-    if((pressedButtons & BUTTON_BACK_LEFT) && (pressedButtons & BUTTON_BACK_RIGHT))
-        address = (BUTTON_BACK_LEFT | BUTTON_BACK_RIGHT);
-    
-    Packet pkt(CMSG_BUTTON_STATUS, 2);
-    pkt.m_data[0] = address;
-    pkt.m_data[1] = uint8_t(pressed);
-    sendPacket(&pkt);
-    led = true;
-    ledCounter = 0;
-   // PORTD &= ~(1<<PD7);
 }
 
 ISR(PCINT0_vect)
 {
     uint8_t status = (PINB & (1<<PB1));
-    _delay_ms(20);
+    //_delay_ms(20);
     if(status != (PINB & (1<<PB1)))
         return;
     ButtonPressed(BUTTON_PAWS, !(PINB & (1<<PB1)));
@@ -72,7 +51,7 @@ ISR(PCINT0_vect)
 ISR(PCINT1_vect)
 {
     uint8_t status = (PINC & (1<<PC0));
-    _delay_ms(20);
+    //_delay_ms(20);
     if(status != (PINC & (1<<PC0)))
         return;
     ButtonPressed(BUTTON_BACK_RIGHT, !(PINC & (1<<PC0)));
@@ -81,7 +60,7 @@ ISR(PCINT1_vect)
 ISR(PCINT2_vect)
 {
     uint8_t status = (PIND & (1<<PD3));
-    _delay_ms(20);
+    //_delay_ms(20);
     if(status != (PIND & (1<<PD3)))
         return;
     ButtonPressed(BUTTON_FRONT, !(PIND & (1<<PD3)));

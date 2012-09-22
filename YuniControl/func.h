@@ -44,6 +44,7 @@ enum Opcodes
     SMSG_SET_RANGE_ADDR      = 0x35,
     SMSG_TEST_RANGE          = 0x36,
     SMSG_FORCE_MOVE          = 0x37,
+    CMSG_COLOR_DATA          = 0x38,
 };
 
 struct Packet
@@ -137,32 +138,49 @@ inline uint16_t GetMinRange(uint8_t adr)
     return result;
 }
 
-uint8_t readButtons(uint8_t adr)
+void readSecondChip(uint8_t adr)
 {
-    uint8_t result = 0;
-    /*i2c.write(adr, 0x01);
-    if(i2c.get_result().result != 1)
-        return 0;*/
-    i2c.read(adr, 1);
+    i2c.write(adr, 1);
     i2c.get_result();
-    result = TWDR;
+
+    i2c.read(adr, 4);
+    i2c.get_result();
+
+    {
+        Packet pkt(CMSG_BUTTON_STATUS, 2);
+        pkt.m_data[0] = BUTTON_OTHER;
+        pkt.m_data[1] = i2c.rx_get();
+        if((PINB & (1<<0)) == 0)
+            pkt.m_data[1] |= 0x80;
+        sendPacket(&pkt);
+    }
+    rs232.wait();
+    {
+        Packet pkt(0x03, 3);
+        pkt.m_data[2] = i2c.rx_get();
+        pkt.m_data[0] = i2c.rx_get();
+        pkt.m_data[1] = i2c.rx_get();
+        sendPacket(&pkt);
+    }
 
     clean_i2c();
     i2c.clear();
-    return result;
 }
 
 bool checkRangeFunc()
 {
-    Packet pkt(CMSG_RANGE_VALUE, 3);
-    uint16_t range = 0;
     bool pass = false;
-    range = ReadRange(rangeLastAdr);
-    pkt.m_data[0] = rangeLastAdr;
-    pkt.setUInt16(1, range);
-    sendPacket(&pkt);
-    if(range != 8 && range <= RANGE_THRESHOLD)
-        pass = true;
+    {
+        Packet pkt(CMSG_RANGE_VALUE, 3);
+        uint16_t range = 0;
+
+        range = ReadRange(rangeLastAdr);
+        pkt.m_data[0] = rangeLastAdr;
+        pkt.setUInt16(1, range);
+        sendPacket(&pkt);
+        if(range != 8 && range <= RANGE_THRESHOLD)
+            pass = true;
+    }
 
     if(rangeLastAdr == 0xF8)
     {
@@ -171,17 +189,9 @@ bool checkRangeFunc()
     }
     else if(rangeLastAdr == 0xE2)
     {
-        uint8_t btns = readButtons(0x01);
-        Packet pkt(CMSG_BUTTON_STATUS, 2);
-        pkt.m_data[0] = BUTTON_OTHER;
-        pkt.m_data[1] = btns;
-        if((PINB & (1<<0)) == 0)
-            pkt.m_data[1] |= 0x80;
-        sendPacket(&pkt);
-        
+        readSecondChip(0x02);
         rangeLastAdr = 0;
     }
 
-    
     return pass;
 }

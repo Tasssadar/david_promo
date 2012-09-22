@@ -1,5 +1,5 @@
 #ifndef JUNIOR_RS232_BPS
-#define JUNIOR_RS232_BPS 38400
+#define JUNIOR_RS232_BPS 4800
 #endif
 
 #ifndef JUNIOR_RS232_SIGNAL
@@ -11,7 +11,7 @@
 #endif
 
 #ifndef JUNIOR_RS232_RXBUF
-# define JUNIOR_RS232_RXBUF 32
+# define JUNIOR_RS232_RXBUF 255
 #endif
 
 #ifndef JUNIOR_RS232_BPS
@@ -236,6 +236,20 @@ public:
         return m_txbuf.empty();
     }
 
+    void setMode(bool receiver)
+    {
+        if(receiver)
+        {
+            UCSR0B &= ~(1<<TXEN0);
+            UCSR0B |= (1<<RXEN0);
+        }
+        else
+        {
+            UCSR0B &= ~(1<<RXEN0);
+            UCSR0B |= (1<<TXEN0);
+        }
+    }
+
 private:
     detail::queue<char, rxmax> m_rxbuf;
     detail::queue<char, txmax> m_txbuf;
@@ -252,10 +266,10 @@ inline void init_rs232()
     UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
 
 #define JUNIOR_UBRR ((F_CPU + 4 * JUNIOR_RS232_BPS) / (8 * JUNIOR_RS232_BPS) - 1)
-
-    UBRR0H = JUNIOR_UBRR >> 8;
-    UBRR0L = JUNIOR_UBRR;
-    UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0);
+    
+    UBRR0H = 0;//JUNIOR_UBRR >> 8;
+    UBRR0L = 207; //JUNIOR_UBRR;
+    UCSR0B = (1<<RXCIE0);
 }
 
 inline void clean_rs232()

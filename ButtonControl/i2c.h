@@ -107,6 +107,7 @@ public:
 //      case 0x68:    // Arbitration lost in SLA as Master, own SLA+W has been received
         case 0x70:    // GCA has been received
 //      case 0x78:    // Arbitration lost in SLA as Master, GCA has been received
+            i2c_idx = 0; 
             m_current_transaction.address = 0x01;
             m_current_transaction.length = m_max_slave_rx_len;
             m_current_transaction.result = 0;
@@ -141,8 +142,8 @@ public:
             TWCR = construct_twcr();
             return true;
 
-        case 0xA8:    // Own SLA+R received, ACK returned
         case 0xB8:    // Data byte has been transmitted, ACK was received
+        case 0xA8:    // Own SLA+R received, ACK returned
             if (m_on_slave_tx == 0)
                 TWDR = 0xff;
             else

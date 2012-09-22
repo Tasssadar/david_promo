@@ -68,6 +68,8 @@ void run()
     setRightServo(690);
     clearLed();
 
+    i2c.max_slave_rx(10);
+
     uint8_t poc = 0;
     while(true)
     {   
