@@ -28,10 +28,12 @@ inline void clean_buttons()
 
 inline void ButtonPressed(uint8_t address, bool pressed)
 {
-    
     if((pressed && (pressedButtons & address)) || (!pressed && !(pressedButtons & address)))
         return;
+
     PORTD |= (1<<PD7);
+    led = true;
+    ledCounter = 100;
 
     if(pressed)
         pressedButtons |= address;

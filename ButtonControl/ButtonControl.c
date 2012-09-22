@@ -11,10 +11,14 @@ volatile uint8_t i2c_idx = 0;
 volatile uint8_t sendColor[3] = { 0 };
 volatile uint8_t pressedButtons = 0;
 volatile bool read = false;
-bool led = false;
 volatile int16_t ledCounter = 1000;
 
-volatile int blink_time[10] = { 0 };
+bool led = false;
+
+uint8_t result[3];
+uint16_t cur_color = 0;
+uint8_t color = 0; // R = 0, G = 1, B = 2
+int8_t character = 2;
 
 #include "buttons.h"
 
@@ -63,18 +67,19 @@ uint8_t toInt(char hexChar)
     return 0;
 }
 
-uint8_t result[3];
-uint16_t cur_color = 0;
-//uint16_t calib[3] = { 108, 98, 144 };
-
-uint8_t color = 0; // R = 0, G = 1, B = 2
-int8_t character = 2;
-
 bool readColor()
 {
     char ch;
     if(!rs232.peek(ch))
         return false;
+
+    if(ch == '$')
+    {
+        color = 0;
+        character = 2;
+        cur_color = 0;
+        return true;
+    }
 
     cur_color |= (toInt(ch) << (character*4));
     --character;
@@ -106,45 +111,25 @@ int main()
     sei();
     init();
 
-
     i2c.address(0x02);
     i2c.on_slave_tx(&i2c_slave_tx, 0);
 
     rs232.setMode(false);
-    rs232.send("=  (00 m ) !");
+    rs232.send("=  (00 $ m ) !");
     rs232.wait();
     rs232.setMode(true);
 
     while(true)
     {
         while(readColor());
-/*
+
         if(led)
         {
-            if(ledCounter <= 0)
-            {
-                for(uint8_t i = 0; i < 10; ++i)
-                {
-                    int cur_time = blink_time[i];
-                    while(cur_time > 0)
-                    {
-                        PORTD |= (1<<PD7);
-                        _delay_ms(500);
-                        PORTD &= ~(1<<PD7);
-                        _delay_ms(500);
-                        --cur_time;
-                    }
-                    PORTD &= ~(1<<PD6);
-                    _delay_ms(500);
-                    PORTD |= (1<<PD6);
-                    _delay_ms(1000);
-                }
-                led = false;
-            }
-            else
+            if(ledCounter > 0)
                 --ledCounter;
+            else
+                PORTD &= ~(1 << PD7);
         }
-        _delay_ms(1);*/
     }
     
     cli();
