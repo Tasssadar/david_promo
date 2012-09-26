@@ -201,7 +201,7 @@ void handlePacket(Packet *pkt)
             for(uint8_t i = 0; i < 4; ++i)
             {
                 uint8_t dataS [2] = { 0, data[i] };
-                i2c.write(0xE0, &dataS[0], 2);
+                i2c.write(pkt->m_data[1], &dataS[0], 2);
                 i2c.get_result();
             }
             clean_i2c();
