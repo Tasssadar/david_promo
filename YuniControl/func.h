@@ -45,6 +45,7 @@ enum Opcodes
     SMSG_TEST_RANGE          = 0x36,
     SMSG_FORCE_MOVE          = 0x37,
     CMSG_COLOR_DATA          = 0x38,
+    SMSG_SET_MOVEMENT_OLD    = 0x39,
 };
 
 struct Packet

@@ -99,6 +99,11 @@ void handlePacket(Packet *pkt)
             SetMovementByFlags();
             break;
         }
+        case SMSG_SET_MOVEMENT_OLD:
+            speed = pkt->m_data[0];
+            moveflags = pkt->m_data[1];
+            SetMovementByFlags();
+            break;
         case SMSG_SET_CORRECTION_VAL:
             correction_treshold = pkt->m_data[0];
             break;
