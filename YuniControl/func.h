@@ -157,7 +157,7 @@ void readSecondChip(uint8_t adr)
     }
     rs232.wait();
     {
-        Packet pkt(0x03, 3);
+        Packet pkt(CMSG_COLOR_DATA, 3);
         pkt.m_data[0] = i2c.rx_get();
         pkt.m_data[1] = i2c.rx_get();
         pkt.m_data[2] = i2c.rx_get();
