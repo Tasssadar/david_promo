@@ -10,6 +10,7 @@ volatile uint8_t i2c_idx = 0;
 
 volatile uint8_t sendColor[3] = { 0 };
 volatile uint8_t pressedButtons = 0;
+volatile uint8_t sendButtons = 0;
 volatile bool read = false;
 volatile int16_t ledCounter = 1000;
 
@@ -45,7 +46,11 @@ static uint8_t i2c_slave_tx(void *)
     switch(i2c_idx++)
     {
         case 0:
-            return pressedButtons;
+        {
+            uint8_t res = sendButtons;
+            sendButtons = pressedButtons;
+            return res;
+        }
         case 1:
             return sendColor[0];
         case 2:
@@ -106,6 +111,7 @@ bool readColor()
     }
     return true;
 }
+
 int main()
 {
     sei();

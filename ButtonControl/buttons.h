@@ -36,7 +36,10 @@ inline void ButtonPressed(uint8_t address, bool pressed)
     ledCounter = 100;
 
     if(pressed)
+    {
         pressedButtons |= address;
+        sendButtons |= address;
+    }
     else
         pressedButtons &= ~(address);
 }

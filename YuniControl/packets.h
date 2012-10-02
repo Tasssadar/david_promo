@@ -182,9 +182,16 @@ void handlePacket(Packet *pkt)
             break;
          }
         case SMSG_SHUTDOWN_RANGE:
+        {
             checkRange = false;
-            state &= ~(STATE_COLLISION);
+            if(state & STATE_COLLISION)
+            {
+                Packet col(CMSG_RANGE_BLOCK_GONE);
+                sendPacket(&col);
+                state &= ~(STATE_COLLISION);
+            }
             break;
+        }
         /*ase SMSG_TEST_RANGE:
         {
             uint8_t adr = FINDER_FRONT1;
