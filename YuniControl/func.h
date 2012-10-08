@@ -124,13 +124,13 @@ inline uint16_t GetMinRange(uint8_t adr)
     uint16_t result = 0;
     i2c.write(adr, 0x04);
     if(i2c.get_result().result != 1)
-        return 0;
+        return 0xFFFF;
     i2c.read(adr, 1);
     i2c.get_result();
     result = (8 << TWDR);
     i2c.write(adr, 0x05);
     if(i2c.get_result().result != 1)
-        return 0;
+        return 0xFFFF;
     i2c.read(adr, 1);
     i2c.get_result();
     result |= TWDR;
