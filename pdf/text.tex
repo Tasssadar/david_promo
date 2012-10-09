@@ -168,15 +168,23 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
     \Large \B{PŘÍKLAD POUŽITÍ \\ Stavba robota pro soutěž Eurobot}
 \end{center}
 \vspace{5mm}
-\enlargethispage{100mm} % zvětší oblast tisku pro tuto stránku   
-
+\enlargethispage{200mm} % zvětší oblast tisku pro tuto stránku   
+\begin{figure}[ht]
+    \begin{minipage}[t]{0.48\linewidth}
 Použití mého programu Lorris je zde prezentováno na příkladu stavby robota, který vznikal na naší škole v roce 2011 pro soutěž Eurobot. Právě při vývoji tohoto robota vyvstala palčivá potřeba mít k dispozici nástoroj, který by umožňoval ve všech fázích jeho vývoje snadné a rychlé testování a ladění všech funkcí a komponent robota. Vzhledem k tomu, že nejviditelnější částí programu Lorris je nástroj Analyzér, je v této ukázce prezentováno především jeho použití, ostatní nástroje (Shupito, Terminál) však byly také použity, například při programování mikročipu v robotovi.
-
-V příkladu je vytvořeno jednoduché uživatelské prostředí pro ovládání, testování a programování pro jednoho robota. Toto prostředí však lze znovu použít i pro jiného robota anebo vytvořit nové, pokud je robot příliš rozdílný a vyžaduje jiný typ ovládání.\\
+\\ \\
+V příkladu je vytvořeno jednoduché uživatelské prostředí pro ovládání, testování a programování pro jednoho robota. Toto prostředí však lze znovu použít i pro jiného robota anebo vytvořit nové, pokud je robot příliš rozdílný a vyžaduje jiný typ ovládání.
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.50\linewidth}
+    %\subfloat{
+        \vspace{0pt}
+        \includegraphics[width=\linewidth]{img/robot.jpg}
+    %}
+    \end{minipage}
+\end{figure}\\
 \\{\large \B{Část 1.: mechanická kostra robota}}\\
 Jako první byla navržena mechanická konstrukce robota. Již v této fázi byla využita moje aplikace Lorris. Pro otestování funkčnosti a chování motorů a servomotorů bylo použito ovládání pomocí joysticku. V Lorris jsem sestavil menší skupinu widgetů: \uv{Script}, který čte data z joysticku, přepočítává je na rychlosti, které je třeba nastavit motorům a odesílá je do robota. Dále widget \uv{Vstup}, ve kterém je nastavení ovládání pomocí joysticku a 2 widgety \uv{Číslo}, které zobrazují aktuální rychlosti motorů.
-
-\vspace{20mm}
 \begin{center}
 \includegraphics{img/joystick2.png}
 \end{center}
