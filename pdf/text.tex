@@ -141,6 +141,7 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
     %}
     \end{minipage}
 \end{figure}
+\vspace{-7mm}
 \begin{itemize} 
     \item Pomocí widgetů lze sestavit rozhraní vyhovující prakticky jakémukoliv robotovi
     \item Analyzér je ideální pro snadné zobrazování dat z prvků, u kterých není vhodné jako výstup použít čísla -- například barevný senzor
@@ -167,7 +168,7 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
     \Large \B{PŘÍKLAD POUŽITÍ \\ Stavba robota pro soutěž Eurobot}
 \end{center}
 \vspace{5mm}
-\enlargethispage{60mm} % zvětší oblast tisku pro tuto stránku   
+\enlargethispage{100mm} % zvětší oblast tisku pro tuto stránku   
 
 Použití mého programu Lorris je zde prezentováno na příkladu stavby robota, který vznikal na naší škole v roce 2011 pro soutěž Eurobot. Právě při vývoji tohoto robota vyvstala palčivá potřeba mít k dispozici nástoroj, který by umožňoval ve všech fázích jeho vývoje snadné a rychlé testování a ladění všech funkcí a komponent robota. Vzhledem k tomu, že nejviditelnější částí programu Lorris je nástroj Analyzér, je v této ukázce prezentováno především jeho použití, ostatní nástroje (Shupito, Terminál) však byly také použity, například při programování mikročipu v robotovi.
 
@@ -175,7 +176,7 @@ V příkladu je vytvořeno jednoduché uživatelské prostředí pro ovládání
 \\{\large \B{Část 1.: mechanická kostra robota}}\\
 Jako první byla navržena mechanická konstrukce robota. Již v této fázi byla využita moje aplikace Lorris. Pro otestování funkčnosti a chování motorů a servomotorů bylo použito ovládání pomocí joysticku. V Lorris jsem sestavil menší skupinu widgetů: \uv{Script}, který čte data z joysticku, přepočítává je na rychlosti, které je třeba nastavit motorům a odesílá je do robota. Dále widget \uv{Vstup}, ve kterém je nastavení ovládání pomocí joysticku a 2 widgety \uv{Číslo}, které zobrazují aktuální rychlosti motorů.
 
-\vspace{40mm}
+\vspace{20mm}
 \begin{center}
 \includegraphics{img/joystick2.png}
 \end{center}
@@ -195,11 +196,11 @@ Po vyladění mechanické části robota byl osazen senzory. Pro jejich sestaven
 \end{center}
 
 \textheight = 380mm
+\textwidth = 380mm
 \newpage
-\enlargethispage{200mm} % zvětší oblast tisku pro tuto stránku   
+\enlargethispage{400mm} % zvětší oblast tisku pro tuto stránku   
 \begin{landscape}
 \voffset = -30mm % posun začátku textu výš
-\setlength{\textwidth}{950pt}
 \begin{center}
     \Large \B{PŘÍKLAD POUŽITÍ \\ Část 3.: programování reaktivního chování robota}
 \end{center}
@@ -207,9 +208,7 @@ Po vyladění mechanické části robota byl osazen senzory. Pro jejich sestaven
 Vrcholem vývoje robota bylo programování jeho chování na herní ploše. Při této příležitosti se v plné míře uplatnil widget \uv{Script} programu Lorris. V tomto widgetu bylo vytvořeno scriptovací prostředí, které zapouzdřilo nejtypičtější povelové sady, pomocí kterých lze s výhodou konstruovat složitější vzorce chování robota. Widget \uv{Script} by umožnil i přímé psaní scriptu pro řízení robota, ale zmíněné prostředí tuto práci výrazně zjednodušilo. Za povšimnutí stojí také to, že zde byl widget script využit nejen pro řízení robota, ale i pro vylepšení fungování samotného nástroje Analyzér.  
  
 V tomto příkladu používám jednoduché \uv{akce}, které robot postupně provádí. Každá akce má 3 hlavní parametry - směr jízdy, kdy se má robot zastavit a co má vykonat, když se zastaví na cílovém místě. Všechny akce je možné ve scriptovacím prostředí rovnou měnit, bez nutnosti přeprogramovávat robota. Všechny ostatní části prostředí Lorris stále fungují, i když robot je právě řízen nastaveným scriptem. Díky tomu lze sledovat stav robota i všech jeho senzorů a rychle zjistit zdroj případného neočekávaného chování. 
-%\vspace{30mm}
 \begin{center}
-\vspace{20mm}
 \includegraphics{img/control2.png}
 \end{center}
 \end{landscape}
