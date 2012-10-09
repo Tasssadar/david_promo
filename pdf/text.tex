@@ -3,7 +3,9 @@
 
 % A POŘÁD ZÁLOHUJTE. POŘÁD !!!
 
-\documentclass[12pt, a4paper, oneside]{article} 
+\usepackage{extsizes}
+\documentclass[17pt]{extreport}
+%\documentclass[12pt, a3paper, oneside]{article} 
 % velikost písma, stránky, typ dokumentu -- detaily viz literatura
 
 \usepackage{czech} % nastavení češtiny
@@ -15,13 +17,16 @@
 \usepackage{subfig} % více obrázků vedle sebe 
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{fix-cm}
 \usepackage{amssymb}
 \usepackage{bbding}
 \usepackage{enumitem}
 \usepackage{multicol}
 \usepackage{xfrac}
+\usepackage[a3paper]{geometry}
 \usepackage{tocloft} %přidá tečky do obsahu ke kapitolám /sekcím 
 \usepackage{pdflscape}
+\usepackage{wrapfig}
 \renewcommand{\cftsecdotsep}{\cftdotsep}
 
 \usepackage[bookmarksopen,colorlinks,plainpages=false,linkcolor=black,urlcolor=blue,citecolor=black,filecolor=black,menucolor=black,unicode=true]{hyperref}
@@ -37,9 +42,10 @@
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
 
-\usepackage{parskip} %-- zapne americké odstavce v celé práci
+%\usepackage{parskip} %-- zapne americké odstavce v celé práci
 
-\setlength{\textwidth}{170mm}
+\setlength{\textwidth}{250mm}
+\setlength{\hoffset}{-20mm}  % posun textu kvůli kroužkové vazbě  
 
 
 \setlength{\intextsep}{5mm} % nastavení mezery okolo obrázků
@@ -55,7 +61,7 @@
 %\makeindex % příprava pro výrobu indexu (jestli ho chcete)
 
 %%    VLNKA <fileinput>  KkSsVvZzOoUuAaIi        
-% Defaultni  koncovka pro <fileinput> je  ".tex"
+% Defaultni  koncovka pro <fileinput> je  ".tex"
 %FIXME: haze error
 %\cstieon % Vypne chovani vlnky jako tvrde mezery v matematickem rezimu
 
@@ -76,7 +82,7 @@
 \newcommand{\Pos}{\footnotesize Experiment: \normalsize}
 \newcommand{\Odv}{\footnotesize Odvození: \normalsize}
 \newcommand{\Vym}{\footnotesize Vymezení pojmu: \normalsize}
-\newcommand{\Ob}{obrázek }
+\newcommand{\Ob}{}
 \newcommand{\It}{\textit}  % kurzíva
 \newcommand{\M}{\mathrm}   % v prostředí rovnic nastaví normální písmo (místo kurzívy ) 
 \newcommand{\F}{\footnotesize} % zmenšená velikost písma
@@ -101,15 +107,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\setlength{\hoffset}{-20mm}  % posun textu kvůli kroužkové vazbě  
-
 \begin{document} % začátek textové části 
 
 % titulní strana
 \pagestyle{empty} % vynechá číslování
- 
+
 \voffset = -20mm % posun začátku textu výš
-\enlargethispage{60mm} % zvětší oblast tisku pro tuto stránku   
+\enlargethispage{100mm} % zvětší oblast tisku pro tuto stránku   
 
 \begin{center}
     \Large \B{LORRIS TOOLBOX \\ sada nástrojů pro vývoj a řízení robotů}
@@ -117,40 +121,42 @@
 \vspace{5mm}
 \setlength{\footskip}{0pt}
 \setlength{\textheight}{750pt}
-
-Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pomáhat při vývoji, ladění a řízení robotů a jiných elektronických zařízení.
-
+Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pomáhat při vývoji, ladění a řízení robotů a jiných elektronických zařízení.\\ \\
 {\large \B 1. Analyzér }
-\begin{itemize}
-    \item Soustřeďuje se na zobrazování dat z robota v grafické podobě
-    \item Analyzér pro zobrazování používá tzv. widgety -- malá \uv{okna}, která zobrazují určitou část dat
-    \item Widgety mají individuální nastavení a uživatel si je může umístit na libovolné místo na pracovní ploše
-    \item Lorris obsahuje několik typů widgetů, například \It{ Číslo, Barva, Sloupcový bar, Kolo} (zobrazení úhlu v kružnici) či \It{Graf}.
+\begin{figure}[ht]
+    \begin{minipage}[t]{0.48\linewidth}
+    \begin{itemize} 
+        \item Soustřeďuje se na zobrazování dat z robota v grafické podobě
+        \item Analyzér pro zobrazování používá tzv. widgety -- malá \uv{okna}, která zobrazují určitou část dat
+        \item Widgety mají individuální nastavení a uživatel si je může umístit na libovolné místo na pracovní ploše
+        \item Lorris obsahuje několik typů widgetů, například \It{ Číslo, Barva, Sloupcový bar, Kolo} (zobrazení úhlu v kružnici) či \It{Graf}.
+    \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.50\linewidth}
+    %\subfloat{
+        \vspace{0pt}
+        \includegraphics[width=\linewidth]{img/screen.png}
+        \centering \It{Hlavní okno programu}
+    %}
+    \end{minipage}
+\end{figure}
+\begin{itemize} 
     \item Pomocí widgetů lze sestavit rozhraní vyhovující prakticky jakémukoliv robotovi
     \item Analyzér je ideální pro snadné zobrazování dat z prvků, u kterých není vhodné jako výstup použít čísla -- například barevný senzor
     \item Některé widgety mohou posílat data i směrem do robota. Díky tomu je možné kromě zobrazování dat robota i ovládat
     \item Pozornost si zaslouží widget \uv{script}. Uživatel v něm může napsat vlastní script, který zpracovává příchozí data. Script může využít ostatní widgety a další části Lorris, díky tomu lze zobrazit takřka jakákoliv data.
 \end{itemize}
-\begin{center}
-\includegraphics{img/color.png} \\
-\It{Příklad: widget \uv{barva}}
-\end{center}
-
 \\{\large \B 2. Uživatelské prostředí pro programátor Shupito }
-
 \begin{itemize}
     \item Shupito je programátor mikrokontrolérů. Na jeden konec programátoru se připojí čip, na druhý počítač -- bez programátoru nelze do mikrokontrolérů nahrát program.
     \item Lorris obsahuje uživatelské rozhraní pro ovládání Shupita -- zapisování programu, čtení a~mazání paměti čipu a~programování pojistek
 \end{itemize}
-
 \\{\large \B 3. Terminál }
-
 \begin{itemize}
     \item Klasický terminál - zobrazuje příchozí data jako text nebo vypisuje byty jako hexadecimální čísla.
 \end{itemize}
-
 \\{\large \B 4. Proxy mezi sériovým portem a TCP socketem }
-
 \begin{itemize}
     \item Vytvoří server připojený na sériový port - k tomuto portu je pak možné se připojit odkudkoliv z internetu
 \end{itemize}
@@ -158,49 +164,55 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
 \newpage
 \voffset = -30mm % posun začátku textu výš
 \begin{center}
-    \Large \B{PŘÍKLAD POUŽITÍ \\ Stavba robota, část 1: kostra}
+    \Large \B{PŘÍKLAD POUŽITÍ \\ Stavba robota pro soutěž Eurobot}
 \end{center}
 \vspace{5mm}
-Prvním krokem při stavbě robota je obvykle postavení kostry s motory. Tyto widgety slouží pro ovládání robota pomocí joysticku připojeného k PC, tak lze otestovat funkčnost a chování motorů.
-\vspace{30mm}
+\enlargethispage{60mm} % zvětší oblast tisku pro tuto stránku   
+
+Použití mého programu Lorris je zde prezentováno na příkladu stavby robota, který vznikal na naší škole v roce 2011 pro soutěž Eurobot. Právě při vývoji tohoto robota vyvstala palčivá potřeba mít k dispozici nástoroj, který by umožňoval ve všech fázích jeho vývoje snadné a rychlé testování a ladění všech funkcí a komponent robota. Vzhledem k tomu, že nejviditelnější částí programu Lorris je nástroj Analyzér, je v této ukázce prezentováno především jeho použití, ostatní nástroje (Shupito, Terminál) však byly také použity, například při programování mikročipu v robotovi.
+
+V příkladu je vytvořeno jednoduché uživatelské prostředí pro ovládání, testování a programování pro jednoho robota. Toto prostředí však lze znovu použít i pro jiného robota anebo vytvořit nové, pokud je robot příliš rozdílný a vyžaduje jiný typ ovládání.\\
+\\{\large \B{Část 1.: mechanická kostra robota}}\\
+Jako první byla navržena mechanická konstrukce robota. Již v této fázi byla využita moje aplikace Lorris. Pro otestování funkčnosti a chování motorů a servomotorů bylo použito ovládání pomocí joysticku. V Lorris jsem sestavil menší skupinu widgetů: \uv{Script}, který čte data z joysticku, přepočítává je na rychlosti, které je třeba nastavit motorům a odesílá je do robota. Dále widget \uv{Vstup}, ve kterém je nastavení ovládání pomocí joysticku a 2 widgety \uv{Číslo}, které zobrazují aktuální rychlosti motorů.
+
+\vspace{40mm}
 \begin{center}
 \includegraphics{img/joystick2.png}
 \end{center}
 
 \newpage
+\enlargethispage{100mm} % zvětší oblast tisku pro tuto stránku   
 \voffset = -30mm % posun začátku textu výš
 \begin{center}
-    \Large \B{PŘÍKLAD POUŽITÍ \\ Stavba robota, část 2: senzory}
+    \Large \B{PŘÍKLAD POUŽITÍ \\ Část 2.: ladění a nastavení senzorů}
 \end{center}
 \vspace{5mm}
-Dalším stupněm vývoje je přidání všech senzorů, podle kterých se robot může orientovat. Tato část je konceptována jako pohled shora na robota - widget \It{Script} tvoří tělo robota, na každém rohu je tlačítko signalizující náraz do mantinelu, u obou kol je enkodér, vepředu jsou dva ultrazvukové měřáky vzdálenosti a barevný senzor.
-%\vspace{30mm}
+Po vyladění mechanické části robota byl osazen senzory. Pro jejich sestavení jsem v nástroji Analyzér vytvořil rozhraní, které využívá zejména widgetů \uv{Script, Číslo, Barva} a \uv{Status}. Každý z těchto widgetů je možné na pracovní ploše Analyzéru přesouvat, zmenšovat nebo zvětšovat, díky čemuž je možné jejich rozmístění tak, aby odpovídalo skutečným pozicím senzorů na robotu. Jako optimální se jeví zobrazení jako při pohledu shora.
+
+\vspace{30mm}
 \begin{center}
-\includegraphics[scale=0.85]{img/sensors2.png}
+\includegraphics{img/sensors2.png}
 \end{center}
 
+\textheight = 380mm
 \newpage
+\enlargethispage{200mm} % zvětší oblast tisku pro tuto stránku   
 \begin{landscape}
 \voffset = -30mm % posun začátku textu výš
+\setlength{\textwidth}{950pt}
 \begin{center}
-    \Large \B{PŘÍKLAD POUŽITÍ \\ Stavba robota, část 3: programování}
+    \Large \B{PŘÍKLAD POUŽITÍ \\ Část 3.: programování reaktivního chování robota}
 \end{center}
 \vspace{5mm}
-Poslední je vývoj samotného programu robota. V tomto příkladu používám jednoduché \uv{akce}, které robot postupně provádí. 
-
-Každá akce má 3 hlavní parametry - směr jízdy, kdy se má robot zastavit a co má vykonat když se zastaví na cílovém místě. Všechny akce je možno rovnou měnit, bez nutnosti přeprogramovat robota.
+Vrcholem vývoje robota bylo programování jeho chování na herní ploše. Při této příležitosti se v plné míře uplatnil widget \uv{Script} programu Lorris. V tomto widgetu bylo vytvořeno scriptovací prostředí, které zapouzdřilo nejtypičtější povelové sady, pomocí kterých lze s výhodou konstruovat složitější vzorce chování robota. Widget \uv{Script} by umožnil i přímé psaní scriptu pro řízení robota, ale zmíněné prostředí tuto práci výrazně zjednodušilo. Za povšimnutí stojí také to, že zde byl widget script využit nejen pro řízení robota, ale i pro vylepšení fungování samotného nástroje Analyzér.  
+ 
+V tomto příkladu používám jednoduché \uv{akce}, které robot postupně provádí. Každá akce má 3 hlavní parametry - směr jízdy, kdy se má robot zastavit a co má vykonat, když se zastaví na cílovém místě. Všechny akce je možné ve scriptovacím prostředí rovnou měnit, bez nutnosti přeprogramovávat robota. Všechny ostatní části prostředí Lorris stále fungují, i když robot je právě řízen nastaveným scriptem. Díky tomu lze sledovat stav robota i všech jeho senzorů a rychle zjistit zdroj případného neočekávaného chování. 
 %\vspace{30mm}
 \begin{center}
-\includegraphics[scale=1]{img/control2.png}
+\vspace{20mm}
+\includegraphics{img/control2.png}
 \end{center}
 \end{landscape}
 
 
 \end{document}
-
-
-
-
-
-
-
