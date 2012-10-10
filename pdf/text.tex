@@ -121,7 +121,7 @@
 \vspace{5mm}
 \setlength{\footskip}{0pt}
 \setlength{\textheight}{750pt}
-Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pomáhat při vývoji, ladění a řízení robotů a jiných elektronických zařízení.\\ \\
+Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pomáhat při vývoji, ladění a řízení robotů, ale i jiných elektronických zařízení.\\ \\
 {\large \B{ 1. Analyzér }}
 \begin{figure}[ht]
     \begin{minipage}[t]{0.48\linewidth}
@@ -144,9 +144,10 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
 \vspace{-7mm}
 \begin{itemize} 
     \item Pomocí widgetů lze sestavit rozhraní vyhovující prakticky jakémukoliv robotovi.
-    \item Analyzér je ideální pro snadné zobrazování dat z prvků, u kterých není vhodné jako výstup použít čísla -- například barevný senzor.
-    \item Některé widgety mohou posílat data i směrem do robota. Díky tomu je možné kromě zobrazování dat robota i ovládat.
-    \item Pozornost si zaslouží widget \uv{script}. Uživatel v něm může napsat vlastní script, který zpracovává příchozí data. Script může využít ostatní widgety a další části Lorris, díky tomu lze zobrazit takřka jakákoliv data.
+    \item Analyzér je ideální i pro snadné zobrazování dat z prvků, u kterých není vhodné jako výstup použít čísla -- například barevný senzor.
+    \item Některé widgety mohou posílat data i směrem do robota. Díky tomu je možné kromě zobrazování dat jejich prostřednictvím robota i ovládat.
+    \item Pozornost si zaslouží widget \uv{script}. Uživatel v něm může napsat vlastní script, který zpracovává příchozí data. Script může využít ostatní widgety a další části Lorris, díky tomu lze zobrazit i jinými způsoby interpretovat takřka jakákoliv data.
+    \item Pomocí scriptu lze upravovat i samotný program Lorris.
 \end{itemize}
 \\{\large \B{ 2. Uživatelské prostředí pro programátor Shupito }}
 \begin{itemize}
@@ -159,7 +160,7 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
 \end{itemize}
 \\{\large \B{ 4. Proxy mezi sériovým portem a TCP socketem }}
 \begin{itemize}
-    \item Vytvoří server připojený na sériový port - k tomuto portu je pak možné se připojit odkudkoliv z internetu.
+    \item Vytvoří server připojený na sériový port - k tomuto portu se pak lze připojit odkudkoliv z internetu.
 \end{itemize}
 
 \newpage
@@ -171,9 +172,9 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
 \enlargethispage{200mm} % zvětší oblast tisku pro tuto stránku   
 \begin{figure}[ht]
     \begin{minipage}[t]{0.48\linewidth}
-Použití mého programu Lorris je zde prezentováno na příkladu stavby robota, který vznikal na naší škole v roce 2011 pro soutěž Eurobot. Právě při vývoji tohoto robota vyvstala palčivá potřeba mít k dispozici nástroj, který by umožňoval ve všech fázích jeho vývoje snadné a rychlé testování a ladění všech funkcí a komponent robota. Vzhledem k tomu, že nejviditelnější částí programu Lorris je nástroj Analyzér, je v této ukázce prezentováno především jeho použití, ostatní nástroje (Shupito, Terminál) však byly také použity, například při programování mikročipu v robotovi.
+Použití mého programu Lorris je zde prezentováno na příkladu stavby robota, který vznikal na naší škole (SPŠ a VOŠ technická, Sokolská 1, Brno) v roce 2011 pro soutěž Eurobot. Právě při vývoji tohoto robota vyvstala palčivá potřeba mít k dispozici nástroj, který by umožňoval ve všech fázích jeho vývoje snadné a rychlé testování a ladění všech funkcí a komponent robota. Vzhledem k tomu, že nejviditelnější částí programu Lorris je nástroj Analyzér, je v této ukázce prezentováno především jeho použití, ostatní nástroje (Shupito, Terminál) však byly také použity, například při programování mikročipu v robotovi.
 \\ \\
-V příkladu je vytvořeno jednoduché uživatelské prostředí pro ovládání, testování a programování pro jednoho robota. Toto prostředí však lze znovu použít i pro jiného robota anebo vytvořit nové, pokud je robot příliš rozdílný a vyžaduje jiný typ ovládání.
+V příkladu je vytvořeno jednoduché uživatelské prostředí pro ovládání, testování a programování pro jednoho robota. Toto prostředí však lze znovu použít i pro jiného robota anebo vytvořit nové, pokud je robot příliš atypický a vyžaduje jiný typ ovládání.
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.50\linewidth}
@@ -215,10 +216,11 @@ Po vyladění mechanické části robota byl osazen senzory. Po jejich umístěn
 \vspace{5mm}
 Vrcholem vývoje robota bylo programování jeho chování na herní ploše. Při této příležitosti se v plné míře uplatnil widget \uv{Script} programu Lorris. V tomto widgetu bylo vytvořeno scriptovací prostředí, které zapouzdřilo nejtypičtější povelové sady, pomocí kterých lze s výhodou konstruovat složitější vzorce chování robota. Widget \uv{Script} by umožnil i přímé psaní scriptu pro řízení robota, ale zmíněné prostředí tuto práci výrazně zjednodušilo. Za povšimnutí stojí také to, že zde byl widget script využit nejen pro řízení robota, ale i pro vylepšení fungování samotného nástroje Analyzér.  
  
-V tomto příkladu používám jednoduché \uv{akce}, které robot postupně provádí. Každá akce má 3 hlavní parametry - směr jízdy, kdy se má robot zastavit a co má vykonat, když se zastaví na cílovém místě. Všechny akce je možné ve scriptovacím prostředí rovnou měnit, bez nutnosti přeprogramovávat robota. Všechny ostatní části prostředí Lorris stále fungují, i když robot je právě řízen nastaveným scriptem. Díky tomu lze sledovat stav robota i všech jeho senzorů a rychle zjistit zdroj případného neočekávaného chování. 
 \begin{center}
 \includegraphics{img/control2.png}
 \end{center}
+
+V tomto příkladu používám jednoduché \uv{akce}, které robot postupně provádí. Každá akce má 3 hlavní parametry - směr jízdy, kdy se má robot zastavit a co má vykonat, když se zastaví na cílovém místě. Všechny akce je možné ve scriptovacím prostředí rovnou měnit, bez nutnosti přeprogramovávat robota. Všechny ostatní části prostředí Lorris stále fungují, i když robot je právě řízen nastaveným scriptem. Díky tomu lze sledovat stav robota i všech jeho senzorů a rychle zjistit zdroj případného neočekávaného chování. 
 \end{landscape}
 
 
