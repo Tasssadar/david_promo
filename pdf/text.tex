@@ -116,20 +116,20 @@
 \enlargethispage{100mm} % zvětší oblast tisku pro tuto stránku   
 
 \begin{center}
-    \Large \B{LORRIS TOOLBOX \\ sada nástrojů pro vývoj a řízení robotů}
+    \Large \B{LORRIS TOOLBOX \\ Sada nástrojů pro vývoj a řízení robotů}
 \end{center}
 \vspace{5mm}
 \setlength{\footskip}{0pt}
 \setlength{\textheight}{750pt}
 Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pomáhat při vývoji, ladění a řízení robotů a jiných elektronických zařízení.\\ \\
-{\large \B 1. Analyzér }
+{\large \B{ 1. Analyzér }}
 \begin{figure}[ht]
     \begin{minipage}[t]{0.48\linewidth}
     \begin{itemize} 
-        \item Soustřeďuje se na zobrazování dat z robota v grafické podobě
-        \item Analyzér pro zobrazování používá tzv. widgety -- malá \uv{okna}, která zobrazují určitou část dat
-        \item Widgety mají individuální nastavení a uživatel si je může umístit na libovolné místo na pracovní ploše
-        \item Lorris obsahuje několik typů widgetů, například \It{ Číslo, Barva, Sloupcový bar, Kolo} (zobrazení úhlu v kružnici) či \It{Graf}.
+        \item Soustřeďuje se na zobrazování dat z robota v grafické podobě.
+        \item Analyzér pro zobrazování používá tzv. widgety -- malá \uv{okna}, která zobrazují určitou část dat.
+        \item Widgety mají individuální nastavení a uživatel si je může umístit na libovolné místo na pracovní ploše.
+        \item Lorris obsahuje několik typů widgetů, například \It{Číslo, Barva, Sloupcový bar, Kolo} (zobrazení úhlu v kružnici) či \It{Graf}.
     \end{itemize}
     \end{minipage}
     \hfill
@@ -143,23 +143,23 @@ Lorris Toolbox je sada několika nástrojů, které mají společný cíl -- pom
 \end{figure}
 \vspace{-7mm}
 \begin{itemize} 
-    \item Pomocí widgetů lze sestavit rozhraní vyhovující prakticky jakémukoliv robotovi
-    \item Analyzér je ideální pro snadné zobrazování dat z prvků, u kterých není vhodné jako výstup použít čísla -- například barevný senzor
-    \item Některé widgety mohou posílat data i směrem do robota. Díky tomu je možné kromě zobrazování dat robota i ovládat
+    \item Pomocí widgetů lze sestavit rozhraní vyhovující prakticky jakémukoliv robotovi.
+    \item Analyzér je ideální pro snadné zobrazování dat z prvků, u kterých není vhodné jako výstup použít čísla -- například barevný senzor.
+    \item Některé widgety mohou posílat data i směrem do robota. Díky tomu je možné kromě zobrazování dat robota i ovládat.
     \item Pozornost si zaslouží widget \uv{script}. Uživatel v něm může napsat vlastní script, který zpracovává příchozí data. Script může využít ostatní widgety a další části Lorris, díky tomu lze zobrazit takřka jakákoliv data.
 \end{itemize}
-\\{\large \B 2. Uživatelské prostředí pro programátor Shupito }
+\\{\large \B{ 2. Uživatelské prostředí pro programátor Shupito }}
 \begin{itemize}
     \item Shupito je programátor mikrokontrolérů. Na jeden konec programátoru se připojí čip, na druhý počítač -- bez programátoru nelze do mikrokontrolérů nahrát program.
-    \item Lorris obsahuje uživatelské rozhraní pro ovládání Shupita -- zapisování programu, čtení a~mazání paměti čipu a~programování pojistek
+    \item Lorris obsahuje uživatelské rozhraní pro ovládání Shupita -- zapisování programu, čtení a~mazání paměti čipu a~programování pojistek.
 \end{itemize}
-\\{\large \B 3. Terminál }
+\\{\large \B{ 3. Terminál }}
 \begin{itemize}
     \item Klasický terminál - zobrazuje příchozí data jako text nebo vypisuje byty jako hexadecimální čísla.
 \end{itemize}
-\\{\large \B 4. Proxy mezi sériovým portem a TCP socketem }
+\\{\large \B{ 4. Proxy mezi sériovým portem a TCP socketem }}
 \begin{itemize}
-    \item Vytvoří server připojený na sériový port - k tomuto portu je pak možné se připojit odkudkoliv z internetu
+    \item Vytvoří server připojený na sériový port - k tomuto portu je pak možné se připojit odkudkoliv z internetu.
 \end{itemize}
 
 \newpage
@@ -183,7 +183,7 @@ V příkladu je vytvořeno jednoduché uživatelské prostředí pro ovládání
     %}
     \end{minipage}
 \end{figure}\\
-\\{\large \B{Část 1.: mechanická kostra robota}}\\
+\\{\large \B{Část 1: mechanická kostra robota}}\\
 Jako první byla navržena mechanická konstrukce robota. Již v této fázi byla využita moje aplikace Lorris. Pro otestování funkčnosti a chování motorů a servomotorů bylo použito ovládání pomocí joysticku. V Lorris jsem sestavil menší skupinu widgetů: \uv{Script}, který čte data z joysticku, přepočítává je na rychlosti, které je třeba nastavit motorům a odesílá je do robota. Dále widget \uv{Vstup}, ve kterém je nastavení ovládání pomocí joysticku a 2 widgety \uv{Číslo}, které zobrazují aktuální rychlosti motorů.
 \begin{center}
 \includegraphics{img/joystick2.png}
@@ -193,10 +193,10 @@ Jako první byla navržena mechanická konstrukce robota. Již v této fázi byl
 \enlargethispage{100mm} % zvětší oblast tisku pro tuto stránku   
 \voffset = -30mm % posun začátku textu výš
 \begin{center}
-    \Large \B{PŘÍKLAD POUŽITÍ \\ Část 2.: ladění a nastavení senzorů}
+    \Large \B{PŘÍKLAD POUŽITÍ \\ Část 2: ladění a nastavení senzorů}
 \end{center}
 \vspace{5mm}
-Po vyladění mechanické části robota byl osazen senzory. Pro jejich sestavení jsem v nástroji Analyzér vytvořil rozhraní, které využívá zejména widgetů \uv{Script, Číslo, Barva} a \uv{Status}. Každý z těchto widgetů je možné na pracovní ploše Analyzéru přesouvat, zmenšovat nebo zvětšovat, díky čemuž je možné jejich rozmístění tak, aby odpovídalo skutečným pozicím senzorů na robotu. Jako optimální se jeví zobrazení jako při pohledu shora.
+Po vyladění mechanické části robota byl osazen senzory. Po jejich umístění jsem v nástroji Analyzér vytvořil rozhraní, které využívá zejména widgetů \uv{Script}, \uv{Číslo}, \uv{Barva} a \uv{Status}. Každý z těchto widgetů je možné na pracovní ploše Analyzéru přesouvat, zmenšovat nebo zvětšovat, díky čemuž je možné jejich rozmístění tak, aby odpovídalo skutečným pozicím senzorů na robotu. Jako optimální se jeví zobrazení jako při pohledu shora.
 
 \vspace{30mm}
 \begin{center}
@@ -210,7 +210,7 @@ Po vyladění mechanické části robota byl osazen senzory. Pro jejich sestaven
 \begin{landscape}
 \voffset = -30mm % posun začátku textu výš
 \begin{center}
-    \Large \B{PŘÍKLAD POUŽITÍ \\ Část 3.: programování reaktivního chování robota}
+    \Large \B{PŘÍKLAD POUŽITÍ \\ Část 3: programování reaktivního chování robota}
 \end{center}
 \vspace{5mm}
 Vrcholem vývoje robota bylo programování jeho chování na herní ploše. Při této příležitosti se v plné míře uplatnil widget \uv{Script} programu Lorris. V tomto widgetu bylo vytvořeno scriptovací prostředí, které zapouzdřilo nejtypičtější povelové sady, pomocí kterých lze s výhodou konstruovat složitější vzorce chování robota. Widget \uv{Script} by umožnil i přímé psaní scriptu pro řízení robota, ale zmíněné prostředí tuto práci výrazně zjednodušilo. Za povšimnutí stojí také to, že zde byl widget script využit nejen pro řízení robota, ale i pro vylepšení fungování samotného nástroje Analyzér.  
